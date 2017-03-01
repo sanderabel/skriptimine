@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+#
+# kysib kasutajanime
+echo "Sisesta kasutajanimi"
+read kasutaja
+andmebaas=$kasutaja'_andmebaas'
+parool=$(openssl rand -hex 8)
+mycnf=/home/$kasutaja/.my.cnf
+### MySQL
+mysql -e "create user '$kasutaja'@'localhost' identified by '$parool';create database $andmebaas; use $andmebaas; grant all privileges on $andmebaas.* to $kasutaja;"
+echo -e "[client]\nhost=localhost\nuser=$kasutaja\npassword=$parool" > $mycnf
+chmod 600 $mycnf
